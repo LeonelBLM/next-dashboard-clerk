@@ -42,7 +42,7 @@ export function SidebarRoutes() {
             <div>
                 <div className='text-center p-6'>
                     <Button variant="outline" className='w-full'>
-                        Upgrade Plan
+                        Contact Admin
                     </Button>
                 </div>
 
