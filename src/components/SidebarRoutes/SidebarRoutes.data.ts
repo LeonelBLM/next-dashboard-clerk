@@ -5,7 +5,10 @@ import {
     Settings,
     ShieldCheck,
     CircleHelpIcon,
-    Calendar
+    Calendar,
+    Truck,
+    Wrench,
+    ChartNoAxesCombined,
 } from 'lucide-react'
 
 export const dataGeneralSidebar =[
@@ -23,6 +26,28 @@ export const dataGeneralSidebar =[
         icon: Calendar,
         label: "Calendar",
         href: "/tasks"
+    },
+]
+
+export const dataGeneralFlota =[
+    {
+        icon: Truck,
+        label: "Vehiculos",
+        href: "/fleet/vehicles"
+    },
+    {
+        icon: Wrench,
+        label: "Mantenimiento",
+        href: "/fleet/maintenance"
+    },
+    {
+        icon: ChartNoAxesCombined,
+        label: "Centro de analisis",
+        href: "/fleet/analytics"
+    },{
+        icon: Truck,
+        label: "Tracking",
+        href: "/"
     },
 ]
 

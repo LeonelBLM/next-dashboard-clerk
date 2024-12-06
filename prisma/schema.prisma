@@ -11,7 +11,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  relationMode = "prisma"
+  //relationMode = "prisma"
 }
 
 model Company {
@@ -65,4 +65,210 @@ model Event {
   updatedAt DateTime @updatedAt
 
   @@index([companyId])
+}
+
+model Vehiculo {
+  id              String              @id @default(uuid())
+  placa           String              @unique @db.Text
+  marca           String              @db.Text
+  modelo          String              @db.Text
+  anio            Int
+  tipoId          String              @map("tipo_id") @db.Text
+  estadoId        String              @map("estado_id") @db.Text
+  tipo            TipoVehiculo        @relation(fields: [tipoId], references: [id])
+  estado          EstadoVehiculo      @relation(fields: [estadoId], references: [id])
+  mantenimientos  Mantenimiento[]
+  viajes          Viaje[]
+  documentos      DocumentosVehiculos[]
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  @@map("vehiculos")
+}
+
+model EstadoVehiculo {
+  id        String     @id @default(uuid())
+  nombre    String     @unique @db.Text
+  vehiculos Vehiculo[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@map("estados_vehiculo")
+}
+
+model Mantenimiento {
+  id          String   @id @default(uuid())
+  vehiculoId  String   @map("vehiculo_id") @db.Text
+  fecha       DateTime @db.Date
+  descripcion String   @db.Text
+  costo       Decimal  @db.Decimal(10, 2)
+  vehiculo    Vehiculo @relation(fields: [vehiculoId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("mantenimientos")
+  @@index([fecha])
+}
+
+model TipoVehiculo {
+  id        String     @id @default(uuid())
+  nombre    String     @unique @db.Text
+  vehiculos Vehiculo[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@map("tipos_vehiculo")
+}
+
+model Chofer {
+  id          String              @id @default(uuid())
+  nombre      String              @db.Text
+  licencia    String              @unique @db.Text
+  telefono    String?             @db.Text
+  documentos  DocumentosChoferes[]
+  viajes      Viaje[]
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  @@map("choferes")
+}
+
+model Remolque {
+  id             String   @id @default(uuid())
+  tipo           String   @db.Text
+  capacidadCarga Decimal  @map("capacidad_carga") @db.Decimal(10, 2)
+  viajes         Viaje[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("remolques")
+}
+
+model Ruta {
+  id        String   @id @default(uuid())
+  origen    String   @db.Text
+  destino   String   @db.Text
+  viajes    Viaje[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("rutas")
+}
+
+model Viaje {
+  id          String      @id @default(uuid())
+  vehiculoId  String      @map("vehiculo_id") @db.Text
+  remolqueId  String      @map("remolque_id") @db.Text
+  choferId    String      @map("chofer_id") @db.Text
+  rutaId      String      @map("ruta_id") @db.Text
+  fechaInicio DateTime    @map("fecha_inicio") @db.Timestamptz
+  fechaFin    DateTime?   @map("fecha_fin") @db.Timestamptz
+  vehiculo    Vehiculo    @relation(fields: [vehiculoId], references: [id])
+  remolque    Remolque    @relation(fields: [remolqueId], references: [id])
+  chofer      Chofer      @relation(fields: [choferId], references: [id])
+  ruta        Ruta        @relation(fields: [rutaId], references: [id])
+  trayectos   Trayecto[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@map("viajes")
+}
+
+model Trayecto {
+  id               String    @id @default(uuid())
+  viajeId          String    @map("viaje_id") @db.Text
+  lugar            String    @db.Text
+  descripcionCarga String    @map("descripcion_carga") @db.Text
+  fechaLlegada     DateTime? @map("fecha_llegada") @db.Timestamptz
+  fechaSalida      DateTime? @map("fecha_salida") @db.Timestamptz
+  viaje            Viaje     @relation(fields: [viajeId], references: [id])
+  cargas           Carga[]
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@map("trayectos")
+}
+
+model Documento {
+  id                String              @id @default(uuid())
+  tipo              String              @db.Text
+  numero            String              @unique @db.Text
+  fechaEmision      DateTime            @map("fecha_emision") @db.Date
+  fechaVencimiento  DateTime            @map("fecha_vencimiento") @db.Date
+  entidadEmisora    String              @map("entidad_emisora") @db.Text
+  vehiculos         DocumentosVehiculos[]
+  choferes          DocumentosChoferes[]
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  @@map("documentos")
+}
+
+model DocumentosVehiculos {
+  id          String    @id @default(uuid())
+  vehiculoId  String    @map("vehiculo_id") @db.Text
+  documentoId String    @map("documento_id") @db.Text
+  vehiculo    Vehiculo  @relation(fields: [vehiculoId], references: [id])
+  documento   Documento @relation(fields: [documentoId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("documentos_vehiculos")
+}
+
+model DocumentosChoferes {
+  id          String    @id @default(uuid())
+  choferId    String    @map("chofer_id") @db.Text
+  documentoId String    @map("documento_id") @db.Text
+  chofer      Chofer    @relation(fields: [choferId], references: [id])
+  documento   Documento @relation(fields: [documentoId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("documentos_choferes")
+}
+
+model Carga {
+  id              String    @id @default(uuid())
+  descripcion     String    @db.Text
+  peso            Decimal   @db.Decimal(10, 2)
+  clienteId       String    @map("cliente_id") @db.Text
+  destinatarioId  String    @map("destinatario_id") @db.Text
+  trayectoId      String    @map("trayecto_id") @db.Text
+  cliente         Entidad   @relation("ClienteCargas", fields: [clienteId], references: [id])
+  destinatario    Entidad   @relation("DestinatarioCargas", fields: [destinatarioId], references: [id])
+  trayecto        Trayecto  @relation(fields: [trayectoId], references: [id])
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@map("cargas")
+}
+
+model Entidad {
+  id            String      @id @default(uuid())
+  nombre        String      @db.Text
+  tipo          String      @db.Text
+  contacto      String?     @db.Text
+  rol           String      @db.Text
+  contactos     Contacto[]
+  cargasCliente Carga[]     @relation("ClienteCargas")
+  cargasDestino Carga[]     @relation("DestinatarioCargas")
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@map("entidades")
+}
+
+model Contacto {
+  id              String   @id @default(uuid())
+  entidadId       String   @map("entidad_id") @db.Text
+  nombreContacto  String   @map("nombre_contacto") @db.Text
+  cargo          String?   @db.Text
+  telefono       String?   @db.Text
+  email          String?   @db.Text
+  entidad        Entidad   @relation(fields: [entidadId], references: [id])
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@map("contactos")
 }
