@@ -1,18 +1,35 @@
-import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 
-const isPublicRoute = createRouteMatcher(['/sign-in(.*)', '/sign-up(.*)', '/api/uploadthing(.*)'])
+export async function middleware(request: NextRequest) {
+  const sessionToken = request.cookies.get('session_token');
 
-export default clerkMiddleware(async (auth, request) => {
-  if (!isPublicRoute(request)) {
-    await auth.protect()
+  // Rutas públicas que no requieren autenticación
+  const publicPaths = ['/signin', '/signup'];
+  if (publicPaths.includes(request.nextUrl.pathname)) {
+    return NextResponse.next();
   }
-})
+
+  // Verificar si el usuario está autenticado
+  if (!sessionToken) {
+    return NextResponse.redirect(new URL('/signin', request.url));
+  }
+
+  // Aquí podrías verificar los permisos basados en el rol
+  // Por ejemplo, obteniendo el usuario de la base de datos y verificando su rol
+
+  return NextResponse.next();
+}
 
 export const config = {
   matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    // Always run for API routes
-    '/(api|trpc)(.*)',
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - public (public files)
+     */
+    '/((?!_next/static|_next/image|favicon.ico|public).*)',
   ],
-}
+};

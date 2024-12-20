@@ -29,7 +29,7 @@ export default async function PageAnalytics() {
 
     return (
         <div className='p-4 rounded-lg shadow-md bg-background'>
-            <h2 className='mb-4 text-2xl'>Analytics page</h2>
+            <h2 className='mb-4 text-2xl'>Cargas enviadas por clientes</h2>
             <div>
                 <CompaniesChart companies={companies} events={events} />
             </div>

@@ -69,19 +69,19 @@ export const columns: ColumnDef<TableIntegrationsProps>[] = [
     },
     {
         accessorKey: "app",
-        header: "APPLICATION",
+        header: "CLIENTE",
         cell: ({ row }) => (
             <div className="capitalize">{row.getValue("app")}</div>
         ),
     },
     {
         accessorKey: "type",
-        header: () => <div>TYPE</div>,
+        header: () => <div>RUBRO</div>,
         cell: ({ row }) => <div className="capitalize">{row.getValue("type")}</div>,
     },
     {
         accessorKey: "rate",
-        header: () => <div className="text-right">RATE</div>,
+        header: () => <div className="text-right">GRADO</div>,
         cell: ({ row }) => (
             <div className="flex items-center gap-1 font-medium text-right">
                 <Progress value={row.getValue("rate")} className="h-2" />
@@ -96,7 +96,7 @@ export const columns: ColumnDef<TableIntegrationsProps>[] = [
                 className="px-0 float-end"
                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             >
-                PROFIT
+                GANANCIA
                 <ChevronUp className="w-4 h-4 ml-2" />
             </Button>
         ),

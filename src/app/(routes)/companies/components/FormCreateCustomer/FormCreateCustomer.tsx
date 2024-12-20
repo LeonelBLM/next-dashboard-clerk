@@ -56,8 +56,8 @@ export function FormCreateCustomer(props: FormCreateCustomerProps) {
         try {
             axios.post("/api/company", values)
             toast({ title: "Company created" })
-            router.refresh()
             setOpenModalCreate(false)
+            router.refresh()
         } catch (error) {
             toast({
                 title: "Something went wrong",
@@ -79,9 +79,9 @@ const { toast } = useToast()
                             name="name"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Company name</FormLabel>
+                                    <FormLabel>Cliente / Razon Social</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Company name..." type="text" {...field} />
+                                        <Input placeholder="Nombre/Razon social..." type="text" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -92,22 +92,22 @@ const { toast } = useToast()
                             name="country"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Country</FormLabel>
+                                    <FormLabel>Departamento</FormLabel>
                                     <Select
                                         onValueChange={field.onChange}
                                         defaultValue={field.value}
                                     >
                                         <FormControl>
                                             <SelectTrigger>
-                                                <SelectValue placeholder="Select the country" />
+                                                <SelectValue placeholder="Selecciona Departamento" />
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            <SelectItem value="spain">España</SelectItem>
-                                            <SelectItem value="united-kingdom">United Kingdom</SelectItem>
-                                            <SelectItem value="portugal">Portugal</SelectItem>
-                                            <SelectItem value="bolivia">Bolivia</SelectItem>
-                                            <SelectItem value="italia">Italia</SelectItem>
+                                            <SelectItem value="Cochabamba">Cochabamba</SelectItem>
+                                            <SelectItem value="Tarija">Tarija</SelectItem>
+                                            <SelectItem value="Santa Cruz">Santa Cruz</SelectItem>
+                                            <SelectItem value="Pando">Pando</SelectItem>
+                                            <SelectItem value="La Paz">La Paz</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <FormMessage />
@@ -121,7 +121,7 @@ const { toast } = useToast()
                                 <FormItem>
                                     <FormLabel>Website</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="www.rafatarrega.com" type="text" {...field} />
+                                        <Input placeholder="Direccion web" type="text" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -132,9 +132,9 @@ const { toast } = useToast()
                             name="phone"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Phone</FormLabel>
+                                    <FormLabel>Numero telefono</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="+34 665 55 55 55" type="number" {...field} />
+                                        <Input placeholder="+591 7455483" type="number" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -145,9 +145,9 @@ const { toast } = useToast()
                             name="cif"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>CIF</FormLabel>
+                                    <FormLabel>Direccion</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="B-1234567" type="text" {...field} />
+                                        <Input placeholder="Direccion..." type="text" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -158,10 +158,10 @@ const { toast } = useToast()
                             name="profileImage"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Profile Image</FormLabel>
+                                    <FormLabel>Imagen Perfil</FormLabel>
                                     <FormControl>
                                         {photoUploaded ? (
-                                            <p className="text-sm">Image uploaded!</p>
+                                            <p className="text-sm">Imagen Cargada!</p>
                                         ) : (
                                             <UploadButton
                                                 className="rounded-lg bg-slate-600/20 text-slate-800 outline-dotted outline-3"
@@ -188,7 +188,7 @@ const { toast } = useToast()
                         />
 
                     </div>
-                    <Button type="submit" disabled={!isValid}>Submit</Button>
+                    <Button type="submit" disabled={!isValid}>Agregar</Button>
                 </form>
             </Form>
         </div>

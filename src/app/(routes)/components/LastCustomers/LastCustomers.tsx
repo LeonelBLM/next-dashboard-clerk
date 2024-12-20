@@ -8,7 +8,7 @@ export function LastCustomers() {
         <div className="p-5 rounded-lg shadow-sm bg-background">
             <div className="flex items-center gap-x-2">
                 <CustomIcon icon={Building} />
-                <p className="text-xl">Last customers</p>
+                <p className="text-xl">Ultimos clientes</p>
             </div>
             <div>
                 <CustomersTable /> 

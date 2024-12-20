@@ -14,7 +14,7 @@ export function ModalAddEvent(props: ModalAddEventProps) {
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent className='sm:max-w-[425px'>
                 <DialogHeader>
-                    <DialogTitle>Add a new event</DialogTitle>
+                    <DialogTitle>Agrega un nuevo viaje</DialogTitle>
                 </DialogHeader>
                 <FormEvent setOnSaveNewEvent={setOnSaveNewEvent}
                     companies={companies}

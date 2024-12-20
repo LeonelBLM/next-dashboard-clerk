@@ -98,7 +98,7 @@ const VehicleTracker = () => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
-            <span>Vehicle Tracking Dashboard</span>
+            <span>Ubicacion de flota en tiempo real</span>
             <Badge variant="secondary" className="ml-2">
               {loading ? 'Updating...' : 'Live'}
             </Badge>

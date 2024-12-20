@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,42 +5,34 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  //relationMode = "prisma"
 }
 
 model Company {
-  id           String  @id @default(uuid())
+  id           String    @id @default(uuid())
   userId       String
-  name         String  @db.Text
-  description  String? @db.Text
-  profileImage String  @db.Text
-  cif          String  @db.Text
-  phone        String  @db.Text
-  country      String  @db.Text
-  website      String  @db.Text
-
-  contacts Contact[]
-
-  events Event[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  name         String    @db.Text
+  description  String?   @db.Text
+  profileImage String    @db.Text
+  cif          String    @db.Text
+  phone        String    @db.Text
+  country      String    @db.Text
+  website      String    @db.Text
+  contacts     Contact[]
+  events       Event[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 }
 
 model Contact {
-  id String @id @default(uuid())
-
-  companyId String? @db.Text
-
-  name  String @db.Text
-  role  String @db.Text
-  email String @db.Text
-  phone String @db.Text
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  company Company? @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  id        String    @id @default(uuid())
+  companyId String?   @db.Text
+  name      String    @db.Text
+  role      String    @db.Text
+  email     String    @db.Text
+  phone     String    @db.Text
+  company   Company?  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   @@index([companyId])
 }
@@ -58,217 +44,307 @@ model Event {
   start      DateTime
   allDay     Boolean
   timeFormat String
-
-  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  company    Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   @@index([companyId])
 }
 
-model Vehiculo {
-  id              String              @id @default(uuid())
-  placa           String              @unique @db.Text
-  marca           String              @db.Text
-  modelo          String              @db.Text
-  anio            Int
-  tipoId          String              @map("tipo_id") @db.Text
-  estadoId        String              @map("estado_id") @db.Text
-  tipo            TipoVehiculo        @relation(fields: [tipoId], references: [id])
-  estado          EstadoVehiculo      @relation(fields: [estadoId], references: [id])
+model Carga {
+  id              Int          @id @default(autoincrement())
+  idViaje         Int?        @map("id_viaje")
+  idCliente       Int?        @map("id_cliente")
+  pesoCarga       Decimal     @map("peso_carga") @db.Decimal(10,2)
+  descripcionCarga String?    @map("descripcion_carga")
+  destino         String?
+  eventos         EventoCarga[]
+  cliente         Cliente?     @relation(fields: [idCliente], references: [id])
+  viaje           Viaje?       @relation(fields: [idViaje], references: [id])
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  @@map("carga")
+}
+
+model Chata {
+  chasis          String           @id
+  tipo_chata      String?          @map("tipo_chata")
+  estado          String?
+  capacidad       String?
+  foto            String?
+  documentos      DocumentoChata[]
+  vehiculos       Vehiculo[]
   mantenimientos  Mantenimiento[]
-  viajes          Viaje[]
-  documentos      DocumentosVehiculos[]
-  createdAt       DateTime            @default(now())
-  updatedAt       DateTime            @updatedAt
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
 
-  @@map("vehiculos")
-}
-
-model EstadoVehiculo {
-  id        String     @id @default(uuid())
-  nombre    String     @unique @db.Text
-  vehiculos Vehiculo[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-
-  @@map("estados_vehiculo")
-}
-
-model Mantenimiento {
-  id          String   @id @default(uuid())
-  vehiculoId  String   @map("vehiculo_id") @db.Text
-  fecha       DateTime @db.Date
-  descripcion String   @db.Text
-  costo       Decimal  @db.Decimal(10, 2)
-  vehiculo    Vehiculo @relation(fields: [vehiculoId], references: [id], onDelete: Cascade)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@map("mantenimientos")
-  @@index([fecha])
-}
-
-model TipoVehiculo {
-  id        String     @id @default(uuid())
-  nombre    String     @unique @db.Text
-  vehiculos Vehiculo[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-
-  @@map("tipos_vehiculo")
+  @@map("chata")
 }
 
 model Chofer {
-  id          String              @id @default(uuid())
-  nombre      String              @db.Text
-  licencia    String              @unique @db.Text
-  telefono    String?             @db.Text
-  documentos  DocumentosChoferes[]
-  viajes      Viaje[]
-  createdAt   DateTime            @default(now())
-  updatedAt   DateTime            @updatedAt
-
-  @@map("choferes")
-}
-
-model Remolque {
-  id             String   @id @default(uuid())
-  tipo           String   @db.Text
-  capacidadCarga Decimal  @map("capacidad_carga") @db.Decimal(10, 2)
-  viajes         Viaje[]
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  @@map("remolques")
-}
-
-model Ruta {
-  id        String   @id @default(uuid())
-  origen    String   @db.Text
-  destino   String   @db.Text
-  viajes    Viaje[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("rutas")
-}
-
-model Viaje {
-  id          String      @id @default(uuid())
-  vehiculoId  String      @map("vehiculo_id") @db.Text
-  remolqueId  String      @map("remolque_id") @db.Text
-  choferId    String      @map("chofer_id") @db.Text
-  rutaId      String      @map("ruta_id") @db.Text
-  fechaInicio DateTime    @map("fecha_inicio") @db.Timestamptz
-  fechaFin    DateTime?   @map("fecha_fin") @db.Timestamptz
-  vehiculo    Vehiculo    @relation(fields: [vehiculoId], references: [id])
-  remolque    Remolque    @relation(fields: [remolqueId], references: [id])
-  chofer      Chofer      @relation(fields: [choferId], references: [id])
-  ruta        Ruta        @relation(fields: [rutaId], references: [id])
-  trayectos   Trayecto[]
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-
-  @@map("viajes")
-}
-
-model Trayecto {
-  id               String    @id @default(uuid())
-  viajeId          String    @map("viaje_id") @db.Text
-  lugar            String    @db.Text
-  descripcionCarga String    @map("descripcion_carga") @db.Text
-  fechaLlegada     DateTime? @map("fecha_llegada") @db.Timestamptz
-  fechaSalida      DateTime? @map("fecha_salida") @db.Timestamptz
-  viaje            Viaje     @relation(fields: [viajeId], references: [id])
-  cargas           Carga[]
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
-
-  @@map("trayectos")
-}
-
-model Documento {
-  id                String              @id @default(uuid())
-  tipo              String              @db.Text
-  numero            String              @unique @db.Text
-  fechaEmision      DateTime            @map("fecha_emision") @db.Date
-  fechaVencimiento  DateTime            @map("fecha_vencimiento") @db.Date
-  entidadEmisora    String              @map("entidad_emisora") @db.Text
-  vehiculos         DocumentosVehiculos[]
-  choferes          DocumentosChoferes[]
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
-
-  @@map("documentos")
-}
-
-model DocumentosVehiculos {
-  id          String    @id @default(uuid())
-  vehiculoId  String    @map("vehiculo_id") @db.Text
-  documentoId String    @map("documento_id") @db.Text
-  vehiculo    Vehiculo  @relation(fields: [vehiculoId], references: [id])
-  documento   Documento @relation(fields: [documentoId], references: [id])
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  @@map("documentos_vehiculos")
-}
-
-model DocumentosChoferes {
-  id          String    @id @default(uuid())
-  choferId    String    @map("chofer_id") @db.Text
-  documentoId String    @map("documento_id") @db.Text
-  chofer      Chofer    @relation(fields: [choferId], references: [id])
-  documento   Documento @relation(fields: [documentoId], references: [id])
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  @@map("documentos_choferes")
-}
-
-model Carga {
-  id              String    @id @default(uuid())
-  descripcion     String    @db.Text
-  peso            Decimal   @db.Decimal(10, 2)
-  clienteId       String    @map("cliente_id") @db.Text
-  destinatarioId  String    @map("destinatario_id") @db.Text
-  trayectoId      String    @map("trayecto_id") @db.Text
-  cliente         Entidad   @relation("ClienteCargas", fields: [clienteId], references: [id])
-  destinatario    Entidad   @relation("DestinatarioCargas", fields: [destinatarioId], references: [id])
-  trayecto        Trayecto  @relation(fields: [trayectoId], references: [id])
+  id              Int       @id @default(autoincrement())
+  nombre          String?
+  apellido        String?
+  fechaNacimiento DateTime? @map("fecha_nacimiento") @db.Date
+  direccion       String?
+  telefono        String?
+  idEstado        Int?      @map("id_estado")
+  documentos      DocumentoChofer[]
+  viajes          Viaje[]
+  estado          EstadoChofer? @relation(fields: [idEstado], references: [id])
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 
-  @@map("cargas")
+  @@map("chofer")
 }
 
-model Entidad {
-  id            String      @id @default(uuid())
-  nombre        String      @db.Text
-  tipo          String      @db.Text
-  contacto      String?     @db.Text
-  rol           String      @db.Text
-  contactos     Contacto[]
-  cargasCliente Carga[]     @relation("ClienteCargas")
-  cargasDestino Carga[]     @relation("DestinatarioCargas")
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-
-  @@map("entidades")
-}
-
-model Contacto {
-  id              String   @id @default(uuid())
-  entidadId       String   @map("entidad_id") @db.Text
-  nombreContacto  String   @map("nombre_contacto") @db.Text
-  cargo          String?   @db.Text
-  telefono       String?   @db.Text
-  email          String?   @db.Text
-  entidad        Entidad   @relation(fields: [entidadId], references: [id])
+model Cliente {
+  id             Int       @id @default(autoincrement())
+  nombre         String?
+  nitCi          String?   @map("nit_ci")
+  direccion      String?
+  ciudad         String?
+  idEstado       Int?      @map("id_estado")
+  fechaRegistro  DateTime? @map("fecha_registro") @db.Date
+  cargas         Carga[]
+  contactos      Contacto[]
+  estado         EstadoCliente? @relation(fields: [idEstado], references: [id])
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
-  @@map("contactos")
+  @@map("cliente")
+}
+
+model Contacto {
+  id          Int      @id @default(autoincrement())
+  idCliente   Int?     @map("id_cliente")
+  nombre      String?
+  cargo       String?
+  telefono    String?
+  email       String?
+  cliente     Cliente? @relation(fields: [idCliente], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("contacto")
+}
+
+model DocumentoChata {
+  id                Int       @id @default(autoincrement())
+  chasisChata      String?   @map("chasis_chata")
+  idTipoDocumento  Int?      @map("id_tipo_documento")
+  numeroDocumento  String?   @map("numero_documento")
+  fechaEmision     DateTime? @map("fecha_emision") @db.Date
+  fechaVencimiento DateTime? @map("fecha_vencimiento") @db.Date
+  estado           String?
+  observaciones    String?
+  chata            Chata?    @relation(fields: [chasisChata], references: [chasis], onDelete: Cascade)
+  tipoDocumento    TipoDocumento? @relation(fields: [idTipoDocumento], references: [id])
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@map("documento_chata")
+  @@index([chasisChata])
+}
+
+model DocumentoChofer {
+  id                Int       @id @default(autoincrement())
+  idChofer         Int?      @map("id_chofer")
+  idTipoDocumento  Int?      @map("id_tipo_documento")
+  numeroDocumento  String?   @map("numero_documento")
+  fechaEmision     DateTime? @map("fecha_emision") @db.Date
+  fechaVencimiento DateTime? @map("fecha_vencimiento") @db.Date
+  estado           String?
+  observaciones    String?
+  chofer           Chofer?   @relation(fields: [idChofer], references: [id], onDelete: Cascade)
+  tipoDocumento    TipoDocumento? @relation(fields: [idTipoDocumento], references: [id])
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@map("documento_chofer")
+}
+
+model DocumentoVehiculo {
+  id                Int       @id @default(autoincrement())
+  idVehiculo       Int?      @map("id_vehiculo")
+  idTipoDocumento  Int?      @map("id_tipo_documento")
+  numeroDocumento  String?   @map("numero_documento")
+  fechaEmision     DateTime? @map("fecha_emision") @db.Date
+  fechaVencimiento DateTime? @map("fecha_vencimiento") @db.Date
+  estado           String?
+  observaciones    String?
+  vehiculo         Vehiculo? @relation(fields: [idVehiculo], references: [id], onDelete: Cascade)
+  tipoDocumento    TipoDocumento? @relation(fields: [idTipoDocumento], references: [id])
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@map("documento_vehiculo")
+}
+
+model EstadoChofer {
+  id          Int      @id @default(autoincrement())
+  estado      String?
+  descripcion String?
+  choferes    Chofer[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("estado_chofer")
+}
+
+model EstadoCliente {
+  id          Int      @id @default(autoincrement())
+  estado      String?
+  descripcion String?
+  clientes    Cliente[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("estado_cliente")
+}
+
+model EstadoVehiculo {
+  id          Int       @id @default(autoincrement())
+  estado      String?
+  descripcion String?
+  vehiculos   Vehiculo[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("estado_vehiculo")
+}
+
+model EventoCarga {
+  id          Int       @id @default(autoincrement())
+  idCarga     Int?      @map("id_carga")
+  fechaHora   DateTime? @map("fecha_hora")
+  descripcion String?
+  carga       Carga?    @relation(fields: [idCarga], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("evento_carga")
+}
+
+model Mantenimiento {
+  id                Int       @id @default(autoincrement())
+  idVehiculo        Int?     @map("id_vehiculo")
+  chasisChata       String?  @map("chasis_chata")
+  tipoActivo       String?   @map("tipo_activo")
+  fechaMantenimiento DateTime? @map("fecha_mantenimiento") @db.Date
+  costo            Decimal?  @db.Decimal(10,2)
+  descripcion      String?
+  vehiculo         Vehiculo? @relation(fields: [idVehiculo], references: [id], onDelete: Cascade, map: "mantenimiento_vehiculo_fkey")
+  chata            Chata?    @relation(fields: [chasisChata], references: [chasis], onDelete: Cascade, map: "mantenimiento_chata_fkey")
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@map("mantenimiento")
+  @@index([chasisChata])
+}
+
+model Rol {
+  id          Int      @id @default(autoincrement())
+  idUsuario   Int?     @map("id_usuario")
+  rol         String?
+  descripcion String?
+  usuario     Usuario? @relation(fields: [idUsuario], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("rol")
+}
+
+model Ruta {
+  id              Int      @id @default(autoincrement())
+  ciudadOrigen    String?  @map("ciudad_origen")
+  ciudadDestino   String?  @map("ciudad_destino")
+  distancia       Decimal? @db.Decimal(10,2)
+  tiempoEstimado  String?  @map("tiempo_estimado")
+  condicionesRuta String?  @map("condiciones_ruta")
+  trayectos       Trayecto[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("ruta")
+}
+
+model TipoDocumento {
+  id                 Int       @id @default(autoincrement())
+  nombre             String?
+  descripcion        String?
+  requiereRenovacion Boolean?  @default(true) @map("requiere_renovacion")
+  diasAlerta         Int?      @default(30) @map("dias_alerta")
+  documentosChata    DocumentoChata[]
+  documentosChofer   DocumentoChofer[]
+  documentosVehiculo DocumentoVehiculo[]
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@map("tipo_documento")
+}
+
+model Trayecto {
+  id          Int      @id @default(autoincrement())
+  idViaje     Int?     @map("id_viaje")
+  idRuta      Int?     @map("id_ruta")
+  orden       Int?
+  viaje       Viaje?   @relation(fields: [idViaje], references: [id])
+  ruta        Ruta?    @relation(fields: [idRuta], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("trayecto")
+}
+
+model Usuario {
+  id        Int      @id @default(autoincrement())
+  nombre    String?
+  clave     String?
+  pin       String?
+  roles     Rol[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("usuario")
+}
+
+model Vehiculo {
+  id             Int      @id @default(autoincrement())
+  chasisChata    String?  @map("chasis_chata")
+  placa          String?
+  modelo         String?
+  marca          String?
+  anio           Int?
+  tipoVehiculo   String?  @map("tipo_vehiculo")
+  idEstado       Int?     @map("id_estado")
+  documentos     DocumentoVehiculo[]
+  mantenimientos Mantenimiento[]
+  viajes         Viaje[]
+  chata          Chata?   @relation(fields: [chasisChata], references: [chasis])
+  estado         EstadoVehiculo? @relation(fields: [idEstado], references: [id])
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("vehiculo")
+  @@index([chasisChata])
+}
+
+model Viaje {
+  id            Int       @id @default(autoincrement())
+  idCamion      Int?      @map("id_camion")
+  idChofer      Int?      @map("id_chofer")
+  fechaSalida   DateTime? @map("fecha_salida") @db.Date
+  fechaLlegada  DateTime? @map("fecha_llegada") @db.Date
+  estadoViaje   String?   @map("estado_viaje")
+  observaciones String?
+  cargas        Carga[]
+  trayectos     Trayecto[]
+  vehiculo      Vehiculo? @relation(fields: [idCamion], references: [id])
+  chofer        Chofer?   @relation(fields: [idChofer], references: [id])
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@map("viaje")
 }

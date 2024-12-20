@@ -33,7 +33,7 @@ export function SidebarRoutes() {
                 <Separator />
 
                 <div className='p-2 md:p-6'>
-                    <p className='text-slate-500 mb-2'>TOOLS</p>
+                    <p className='text-slate-500 mb-2'>HERRAMIENTAS</p>
                     {dataToolsSidebar.map((item) => (
                         <SidebarItem key={item.label} item={item} />
                     ))}
@@ -42,7 +42,7 @@ export function SidebarRoutes() {
                 <Separator />
 
                 <div className='p-2 md:p-6'>
-                    <p className='text-slate-500 mb-2'>SUPPORT</p>
+                    <p className='text-slate-500 mb-2'>SOPORTE</p>
                     {dataSupportSidebar.map((item) => (
                         <SidebarItem key={item.label} item={item} />
                     ))}
@@ -52,14 +52,14 @@ export function SidebarRoutes() {
             <div>
                 <div className='text-center p-6'>
                     <Button variant="outline" className='w-full'>
-                        Contact Admin
+                        Contactar Admin
                     </Button>
                 </div>
 
                 <Separator />
 
                 <footer className='mt-3 p-3 text-center'>
-                    2024. All rights reserved
+                    2024. Todos los derechos reservados.
                 </footer>
             </div>
         </div>

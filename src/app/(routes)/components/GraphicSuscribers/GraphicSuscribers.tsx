@@ -20,7 +20,7 @@ export function GraphicSuscribers() {
           8,5%
           <TrendingUp strokeWidth={1} className="h-4 w-4" />
         </div>
-        <p className="text-slate-500">+432 increased</p>
+        <p className="text-slate-500">+432 Incremento</p>
       </div>
       <div className="h-[350px]">
         <ResponsiveContainer width="100%" height="100%">

@@ -27,8 +27,8 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
 interface DataTableProps<TData, TValue> {
-    columns: ColumnDef<TData, TValue>[],
-    data: TData[]
+    columns: ColumnDef<TData, any>[];
+    data: TData[];
 }
 
 export function DataTable<TData, TValue>({

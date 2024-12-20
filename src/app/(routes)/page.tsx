@@ -12,21 +12,21 @@ export const dataCardsSummary = [
     icon: UsersRound,
     total: "23.450",
     average: 15,
-    title: "Companies Created",
+    title: "Entregas totales",
     tooltipText: "See all of the companies created",
   },
   {
     icon: Waypoints,
     total: "86.6%",
     average: 80,
-    title: "Total Revenue",
+    title: "Satisfacción del cliente",
     tooltipText: "See all of the revenue",
   },
   {
     icon: BookOpenCheck,
     total: "3240.,32$",
     average: 23,
-    title: "Bounce rate",
+    title: "Rentabilidad de viajes",
     tooltipText: "See all of the bounce rate",
   },
 ];
@@ -34,7 +34,7 @@ export const dataCardsSummary = [
 function HomePage() {
   return (
     <div>
-      <h2 className="text-2xl mb-4">DashBoard</h2>
+      <h2 className="text-2xl mb-4">Dashboard</h2>
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3 lg:gap-x-20">
         {dataCardsSummary.map(
           ({ icon, total, average, title, tooltipText }) => (

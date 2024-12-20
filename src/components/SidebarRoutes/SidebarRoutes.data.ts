@@ -9,6 +9,7 @@ import {
     Truck,
     Wrench,
     ChartNoAxesCombined,
+    BookCheck,
 } from 'lucide-react'
 
 export const dataGeneralSidebar =[
@@ -19,7 +20,7 @@ export const dataGeneralSidebar =[
     },
     {
         icon: Building2,
-        label: "Companies",
+        label: "Clientes",
         href: "/companies"
     },
     {
@@ -36,6 +37,16 @@ export const dataGeneralFlota =[
         href: "/fleet/vehicles"
     },
     {
+        icon: Truck,
+        label: "Carrocerias",
+        href: "/chata"
+    },
+    {
+        icon: Truck,
+        label: "Choferes",
+        href: "/chofer"
+    },
+    {
         icon: Wrench,
         label: "Mantenimiento",
         href: "/fleet/maintenance"
@@ -45,10 +56,22 @@ export const dataGeneralFlota =[
         label: "Centro de analisis",
         href: "/fleet/analytics"
     },{
+        icon: ChartNoAxesCombined,
+        label: "Gestion de Rutas",
+        href: "/rutas"
+    },{
         icon: Truck,
         label: "Tracking",
-        href: "/"
-    },
+        href: "/tracking"
+    },{
+        icon: BookCheck,
+        label: "Documentos",
+        href: "/dashdocuments"
+    },{
+        icon: BookCheck,
+        label: "Documentos Chofer",
+        href: "/documento"
+    },  
 ]
 
 export const dataToolsSidebar = [
@@ -59,7 +82,7 @@ export const dataToolsSidebar = [
     },
     {
         icon: BarChart4,
-        label: "Analytics",
+        label: "Analiticas",
         href: "/analytics"
     },
 ]

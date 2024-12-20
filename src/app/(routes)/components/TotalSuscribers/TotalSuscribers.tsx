@@ -17,7 +17,7 @@ export function TotalSuscribers() {
         <div className="w-full p-5 mb-4 transition rounded-lg shadow-sm lg:mb-0 bg-background xl:w-96 hover:shadow-lg">
             <div className="flex items-center mb-4 gap-x-2">
                 <CustomIcon icon={Percent} />
-                <p className="text-xl">Total Suscribers</p>
+                <p className="text-xl">Total Viajes</p>
             </div>
             <div className="w-full h-[200px] p-5">
                 <ResponsiveContainer aspect={1} maxHeight={200}>

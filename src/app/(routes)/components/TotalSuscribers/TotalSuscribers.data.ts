@@ -1,16 +1,16 @@
 export const dataTotalSuscribers = [
     {
-      name: "Website",
+      name: "5660BYD",
       value: 456,
       fill: "#8884d8",
     },
     {
-      name: "Instagram",
+      name: "3016LYE",
       value: 854,
       fill: "#00C49F",
     },
     {
-      name: "Other",
+      name: "2464NNU",
       value: 240,
       fill: "#FFBB28",
     },
